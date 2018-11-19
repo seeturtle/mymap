@@ -2,11 +2,11 @@ package com.example.iidatakuya.mymap
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_main.*
@@ -14,22 +14,28 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+    private lateinit var fragmentManager: FragmentManager
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                //message.setText(R.string.title_home)
-                println("Hello")
+                val fragment = MapFragment()
+                val transaction = fragmentManager.beginTransaction()
+                transaction.replace(R.id.fragments, fragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-                //message.setText(R.string.title_dashboard)
-                println("Hello2")
+                val fragment = ListFragment()
+                val transaction = fragmentManager.beginTransaction()
+                transaction.replace(R.id.fragments, fragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
-                //message.setText(R.string.title_notifications)
-                println("Hello3")
+                println("未定のタブ")
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -40,9 +46,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        // val mapFragment = supportFragmentManager
+        //        .findFragmentById(R.id.map) as SupportMapFragment
+        // mapFragment.getMapAsync(this)
+        fragmentManager = supportFragmentManager
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
@@ -59,7 +66,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-//        test
+        // test
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
