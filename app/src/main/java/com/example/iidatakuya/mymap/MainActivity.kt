@@ -13,7 +13,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-
+import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.FragmentManager
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 
@@ -25,6 +27,34 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
     private val mLatitude = 34.0 + 46.0 / 60 + 41.0 / (60 * 60)
     private val mLongitude = 135.0 + 15.0 / 60 + 49.0 / (60 * 60)
 
+    private lateinit var fragmentManager: FragmentManager
+
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_home -> {
+                val fragment = MapFragment()
+                val transaction = fragmentManager.beginTransaction()
+                transaction.replace(R.id.fragments, fragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_dashboard -> {
+                val fragment = ListFragment()
+                val transaction = fragmentManager.beginTransaction()
+                transaction.replace(R.id.fragments, fragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_notifications -> {
+                println("未定のタブ")
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -32,6 +62,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        fragmentManager = supportFragmentManager
+
+        val fragment = MapFragment()
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragments, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener
 
         // 位置情報パーミッションの通知
         if (ContextCompat.checkSelfPermission(this,
@@ -81,6 +120,5 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         // ピンを立てる
         mMap.addMarker(MarkerOptions().position(p0!!).title("LongClick").draggable(false))
     }
-
 
 }
