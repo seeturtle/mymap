@@ -1,6 +1,7 @@
 package com.example.iidatakuya.mymap
 
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -8,10 +9,32 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_home -> {
+                //message.setText(R.string.title_home)
+                println("Hello")
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_dashboard -> {
+                //message.setText(R.string.title_dashboard)
+                println("Hello2")
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_notifications -> {
+                //message.setText(R.string.title_notifications)
+                println("Hello3")
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +43,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
     /**
