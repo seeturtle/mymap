@@ -9,7 +9,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback ,GoogleMap.OnMapLongClickListener{
 
     private lateinit var mMap: GoogleMap
 
@@ -39,5 +39,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val sydney = LatLng(-34.0, 151.0)
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        mMap.setOnMapLongClickListener(this)
+    }
+
+    //  長押し検知
+    override fun onMapLongClick(p0: LatLng?) {
+        // ピンを立てる
+        mMap.addMarker(MarkerOptions().position(p0!!).title("LongClick").draggable(false))
     }
 }
