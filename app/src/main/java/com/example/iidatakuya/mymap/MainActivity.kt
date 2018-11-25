@@ -8,13 +8,12 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import com.example.iidatakuya.mymap.fragment.LocationFragment
+import com.example.iidatakuya.mymap.fragment.dummy.DummyContent
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-
-
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : AppCompatActivity(), LocationFragment.OnListFragmentInteractionListener {
 
     private lateinit var fragmentManager: FragmentManager
 
@@ -29,7 +28,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-                val fragment = ListFragment()
+                val fragment = LocationFragment()
                 val transaction = fragmentManager.beginTransaction()
                 transaction.replace(R.id.fragments, fragment)
                 transaction.addToBackStack(null)
@@ -59,12 +58,16 @@ class MainActivity : AppCompatActivity() {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         // 位置情報パーミッションの通知
-        if(ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     1000)
         }
+    }
+
+    override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**
