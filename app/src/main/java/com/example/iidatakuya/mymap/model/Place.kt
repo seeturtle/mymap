@@ -6,7 +6,7 @@ import io.realm.annotations.Required
 import java.util.*
 
 
-open class Location : RealmObject() {
+open class Place : RealmObject() {
     @PrimaryKey
     var id: String = UUID.randomUUID().toString()
     @Required

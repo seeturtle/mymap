@@ -6,59 +6,40 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.iidatakuya.mymap.R
+import com.example.iidatakuya.mymap.model.Place
+import io.realm.OrderedRealmCollection
+import io.realm.RealmRecyclerViewAdapter
 
-
-import com.example.iidatakuya.mymap.fragment.LocationFragment.OnListFragmentInteractionListener
-import com.example.iidatakuya.mymap.fragment.dummy.DummyContent.DummyItem
-
-import kotlinx.android.synthetic.main.fragment_location.view.*
-
-/**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
- */
-class MyLocationRecyclerViewAdapter(
-        private val mValues: List<DummyItem>,
-        private val mListener: OnListFragmentInteractionListener?)
-    : RecyclerView.Adapter<MyLocationRecyclerViewAdapter.ViewHolder>() {
-
-    private val mOnClickListener: View.OnClickListener
+internal class MyLocationRecyclerViewAdapter(data: OrderedRealmCollection<Place>) :
+        RealmRecyclerViewAdapter<Place, MyLocationRecyclerViewAdapter.MyViewHolder>(data, true) {
 
     init {
-        mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as DummyItem
-            // Notify the active callbacks interface (the activity, if the fragment is attached to
-            // one) that an item has been selected.
-            mListener?.onListFragmentInteraction(item)
-        }
+        setHasStableIds(true)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.fragment_location, parent, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_location, parent, false)
+        return MyViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues[position]
-        holder.mIdView.text = item.id
-        holder.mContentView.text = item.content
+    // 実際にアイテムに受け取ったデータをセット
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val obj = getItem(position)
 
-        with(holder.mView) {
-            tag = item
-            setOnClickListener(mOnClickListener)
-        }
+        //ビューホルダーに値を入れる
+        holder.name?.text = obj?.name
     }
 
-    override fun getItemCount(): Int = mValues.size
+//    override fun getItemId(index: Int): Long {
+//        return getItem(index)!!.id.toLong()
+//    }
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.item_number
-        val mContentView: TextView = mView.content
+    internal inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var name: TextView? = null
 
-        override fun toString(): String {
-            return super.toString() + " '" + mContentView.text + "'"
+        init {
+            //ビューホルダーの情報がレイアウトのどれと対応するか
+            name = view.findViewById(R.id.content)
         }
     }
 }

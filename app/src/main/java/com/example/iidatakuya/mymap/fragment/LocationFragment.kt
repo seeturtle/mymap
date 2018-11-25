@@ -10,9 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.iidatakuya.mymap.R
-
-import com.example.iidatakuya.mymap.fragment.dummy.DummyContent
-import com.example.iidatakuya.mymap.fragment.dummy.DummyContent.DummyItem
+import com.example.iidatakuya.mymap.model.Place
+import io.realm.Realm
 
 /**
  * A fragment representing a list of Items.
@@ -26,6 +25,8 @@ class LocationFragment : Fragment() {
 
     private var listener: OnListFragmentInteractionListener? = null
 
+    private lateinit var mRealm: Realm
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,6 +38,7 @@ class LocationFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_location_list, container, false)
+        mRealm = Realm.getDefaultInstance()
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -45,7 +47,7 @@ class LocationFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = MyLocationRecyclerViewAdapter(DummyContent.ITEMS, listener)
+                adapter = MyLocationRecyclerViewAdapter(mRealm.where(Place::class.java).findAll())
             }
         }
         return view
@@ -78,7 +80,7 @@ class LocationFragment : Fragment() {
      */
     interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: DummyItem?)
+        fun onListFragmentInteraction(item: Place?)
     }
 
     companion object {
