@@ -10,11 +10,12 @@ class MyMapApplication : Application() {
         super.onCreate()
 
         Realm.init(this)
+
+        /* ダミーデータの挿入
         val realmConfiguration = RealmConfiguration.Builder().build()
         Realm.deleteRealm(realmConfiguration) // Delete Realm between app restarts.
         Realm.setDefaultConfiguration(realmConfiguration)
 
-        // ダミーデータ
         val realm = Realm.getDefaultInstance()
         var place = Place()
         place.name = "hoge"
@@ -24,6 +25,7 @@ class MyMapApplication : Application() {
             realm.insert(place)
             realm.insert(place2)
         }
+        */
 
     }
 }

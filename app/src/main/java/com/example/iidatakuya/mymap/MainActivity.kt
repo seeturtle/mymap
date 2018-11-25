@@ -17,7 +17,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
 
     override fun onListFragmentInteraction(item: Place?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // タップ時のインタラクション
+        println(item?.name)
     }
 
     private lateinit var fragmentManager: FragmentManager
