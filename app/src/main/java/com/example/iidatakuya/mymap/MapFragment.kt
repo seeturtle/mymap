@@ -2,6 +2,8 @@ package com.example.iidatakuya.mymap
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -10,6 +12,7 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -35,6 +38,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        // マップのView表示
         val mapFragment = childFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -75,7 +79,24 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
 
     //  長押し検知
     override fun onMapLongClick(p0: LatLng?) {
-        // ピンを立てる
-        mMap.addMarker(MarkerOptions().position(p0!!).title("LongClick").draggable(false))
+
+        var contents : String
+
+        //テキスト入力を受け付けるビューを作成
+        val editView = EditText(context)
+        AlertDialog.Builder(context)
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setTitle("場所を追加")
+                //setViewにてビューを設定します。
+                .setView(editView)
+                .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, whichButton ->
+                    //入力した文字を保存
+                    contents = editView.text.toString()
+
+                    // ピンを立てる
+                    mMap.addMarker(MarkerOptions().position(p0!!).title(contents).draggable(false))
+                })
+                .setNegativeButton("キャンセル", DialogInterface.OnClickListener { dialog, whichButton -> })
+                .show()
     }
 }
