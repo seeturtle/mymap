@@ -9,11 +9,16 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import com.example.iidatakuya.mymap.fragment.LocationFragment
-import com.example.iidatakuya.mymap.fragment.dummy.DummyContent
+import com.example.iidatakuya.mymap.fragment.LocationFragment.OnListFragmentInteractionListener
+import com.example.iidatakuya.mymap.model.Place
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), LocationFragment.OnListFragmentInteractionListener {
+class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
+
+    override fun onListFragmentInteraction(item: Place?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private lateinit var fragmentManager: FragmentManager
 
@@ -64,10 +69,6 @@ class MainActivity : AppCompatActivity(), LocationFragment.OnListFragmentInterac
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     1000)
         }
-    }
-
-    override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**

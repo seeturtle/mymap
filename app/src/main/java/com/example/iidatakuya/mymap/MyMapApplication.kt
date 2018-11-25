@@ -18,8 +18,11 @@ class MyMapApplication : Application() {
         val realm = Realm.getDefaultInstance()
         var place = Place()
         place.name = "hoge"
+        var place2 = Place()
+        place2.name = "fuga"
         realm.executeTransaction {
             realm.insert(place)
+            realm.insert(place2)
         }
 
     }
