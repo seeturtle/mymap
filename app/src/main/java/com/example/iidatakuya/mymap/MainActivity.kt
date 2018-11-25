@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
 
     override fun onListFragmentInteraction(item: Place?) {
-        // タップ時のインタラクション
+        // TODO: タップ時のインタラクションを設定
         println(item?.name)
     }
 
