@@ -2,15 +2,17 @@ package com.example.iidatakuya.mymap.model
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import io.realm.annotations.Required
 import java.util.*
 
 
-class Location : RealmObject() {
+open class Location : RealmObject() {
     @PrimaryKey
-    private val id: String = UUID.randomUUID().toString()
-    private val name: String? = null
-    private val latitude: Double = 0.0
-    private val longitude: Double = 0.0
-    private val discription: String? = null
-    private val createdAt: Date? = null
+    var id: String = UUID.randomUUID().toString()
+    @Required
+    var name: String = ""
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
+    var discription: String = ""
+    var createdAt: Date = Date()
 }
