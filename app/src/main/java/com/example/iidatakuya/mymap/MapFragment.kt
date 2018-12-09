@@ -13,6 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.example.iidatakuya.mymap.model.Place
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -75,7 +77,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
         mRealm = Realm.getDefaultInstance()
 
         // 保存しているピン表示
-        var savedPlace = mRealm.where<Place>(Place::class.java!!).findAll()
+        val savedPlace = mRealm.where<Place>(Place::class.java!!).findAll()
         for(fav in savedPlace){
             mMap.addMarker(MarkerOptions().position(LatLng(fav.latitude,fav.longitude)!!).title(fav.name).draggable(false))
         }
@@ -96,30 +98,56 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
     //  長押し検知
     override fun onMapLongClick(p0: LatLng?) {
 
-        var contents : String
+        var name : String
+        var description : String
 
-        //テキスト入力を受け付けるビューを作成
-        val editView = EditText(context)
-        AlertDialog.Builder(context)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setTitle("場所を追加")
-                //setViewにてビューを設定します。
-                .setView(editView)
-                .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, whichButton ->
+        // アラートダイアログビルダーのインスタンス生成
+        val dialog = AlertDialog.Builder(context)
+
+        // レイアウト作成（外枠とパーツの作成）
+        val layout = LinearLayout(context)
+        // 上から下にパーツを組み込む設定
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        // レイアウトに組み込むパーツの作成
+        val textView1 : TextView = TextView(context)
+        textView1.text = "場所の名前"
+        val textView2 : TextView = TextView(context)
+        textView2.text = "詳細情報"
+        // テキスト入力を受け付けるパーツ
+        val editView1 = EditText(context)
+        val editView2 = EditText(context)
+
+        //外枠にパーツを組み込む
+        layout.addView(textView1, LinearLayout.LayoutParams(300, 40))
+        layout.addView(editView1, LinearLayout.LayoutParams(300, 70))
+        layout.addView(textView2, LinearLayout.LayoutParams(300, 40))
+        layout.addView(editView2, LinearLayout.LayoutParams(300, 70))
+
+        //レイアウトをダイアログに設定
+        dialog.setView(layout);
+        //タイトルの設定
+        dialog.setTitle("場所を追加");
+
+        // dialogOKボタン
+        dialog.setPositiveButton("OK", DialogInterface.OnClickListener { dialog, whichButton ->
+
                     //入力した文字を保存
-                    contents = editView.text.toString()
+                    name = editView1.text.toString()
+                    description = editView2.text.toString()
 
                     // ピンを立てる
-                    mMap.addMarker(MarkerOptions().position(p0!!).title(contents).draggable(false))
+                    mMap.addMarker(MarkerOptions().position(p0!!).title(name).draggable(false))
 
                     // データを保存
                     mRealm.executeTransaction {
                         //新規Place作成
                         val place: Place = mRealm.createObject<Place>(primaryKeyValue = UUID.randomUUID().toString())
                         // データ挿入
-                        place.name = contents
+                        place.name = name
                         place.latitude = p0.latitude
                         place.longitude = p0.longitude
+                        place.description = description
                     }
                 })
                 .setNegativeButton("キャンセル", DialogInterface.OnClickListener { dialog, whichButton -> })

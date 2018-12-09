@@ -1,6 +1,8 @@
 package com.example.iidatakuya.mymap
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -11,14 +13,30 @@ import android.support.v7.app.AppCompatActivity
 import com.example.iidatakuya.mymap.fragment.LocationFragment
 import com.example.iidatakuya.mymap.fragment.LocationFragment.OnListFragmentInteractionListener
 import com.example.iidatakuya.mymap.model.Place
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
 
+    private lateinit var mRealm: Realm
+
     override fun onListFragmentInteraction(item: Place?) {
         // TODO: タップ時のインタラクションを設定
-        println(item?.name)
+        //データベースのオープン処理
+        mRealm = Realm.getDefaultInstance()
+        // アイテムに紐づく保存場所を取ってくる
+        val selectPlace = mRealm.where<Place>(Place::class.java!!)
+                .equalTo("id", item?.id)
+                .findFirst()
+
+        AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setTitle(selectPlace?.name)
+                .setMessage(selectPlace?.description)
+                .setNegativeButton("戻る", DialogInterface.OnClickListener { dialog, whichButton -> })
+                .show()
+
     }
 
     private lateinit var fragmentManager: FragmentManager
