@@ -14,6 +14,7 @@ import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -115,6 +116,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
         val layout = LinearLayout(context)
         // 上から下にパーツを組み込む設定
         layout.orientation = LinearLayout.VERTICAL
+        layout.gravity = Gravity.CENTER
 
         // レイアウトに組み込むパーツの作成
         val textView1 = TextView(context)
@@ -139,12 +141,12 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
         imageView = ImageView(context)
 
         //外枠にパーツを組み込む
-        layout.addView(textView1, LinearLayout.LayoutParams(300, 40))
-        layout.addView(editView1, LinearLayout.LayoutParams(300, 70))
-        layout.addView(textView2, LinearLayout.LayoutParams(300, 40))
-        layout.addView(editView2, LinearLayout.LayoutParams(300, 70))
-        layout.addView(addImageButton, LinearLayout.LayoutParams(300, 70))
-        layout.addView(imageView, LinearLayout.LayoutParams(300, 70))
+        layout.addView(textView1, LinearLayout.LayoutParams(500, 80))
+        layout.addView(editView1, LinearLayout.LayoutParams(500, 100))
+        layout.addView(textView2, LinearLayout.LayoutParams(500, 80))
+        layout.addView(editView2, LinearLayout.LayoutParams(500, 300))
+        layout.addView(addImageButton, LinearLayout.LayoutParams(300, 120))
+        layout.addView(imageView, LinearLayout.LayoutParams(500, 500))
 
         //レイアウトをダイアログに設定
         dialog.setView(layout)
