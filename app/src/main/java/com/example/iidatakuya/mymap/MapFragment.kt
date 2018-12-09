@@ -123,6 +123,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
         val layout = LinearLayout(context)
         // 上から下にパーツを組み込む設定
         layout.orientation = LinearLayout.VERTICAL
+        layout.gravity = Gravity.CENTER
 
         // レイアウトに組み込むパーツの作成
         val textView1 = TextView(context)
