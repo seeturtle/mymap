@@ -4,17 +4,12 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.Gravity
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.example.iidatakuya.mymap.fragment.LocationFragment
 import com.example.iidatakuya.mymap.fragment.LocationFragment.OnListFragmentInteractionListener
 import com.example.iidatakuya.mymap.model.Place
@@ -27,6 +22,7 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
     private lateinit var mRealm: Realm
 
     override fun onListFragmentInteraction(item: Place?) {
+        // TODO: タップ時のインタラクションを設定
         //データベースのオープン処理
         mRealm = Realm.getDefaultInstance()
         // アイテムに紐づく保存場所を取ってくる
@@ -60,7 +56,24 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
                 .setTitle(selectPlace?.name)
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .setTitle(selectPlace?.name)
-                .setNegativeButton("戻る") { dialog, whichButton -> }
+                .setMessage(selectPlace?.description)
+                .setPositiveButton("マップに移動する") { dialog, whichButton ->
+
+                    val fragment = MapFragment()
+
+                    // データを渡す為の処理　Bundleを生成し、渡すデータを内包させる
+                    val bundle = Bundle()
+                    bundle.putDouble("longitude", selectPlace!!.longitude) // 引数はkey valueの形
+                    bundle.putDouble("latitude", selectPlace!!.latitude)
+                    fragment.setArguments(bundle)
+
+                    val transaction = fragmentManager.beginTransaction()
+                    // replaceでマップの切り替え　セットされているFragmentを全てRemoveしてから、指定のFragmentをAddする。
+                    transaction.replace(R.id.fragments, fragment)
+                    transaction.addToBackStack(null)
+                    transaction.commit()
+                }
+                .setNegativeButton("戻る", DialogInterface.OnClickListener { dialog, whichButton -> })
                 .show()
 
     }

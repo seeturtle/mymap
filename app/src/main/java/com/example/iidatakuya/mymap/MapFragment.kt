@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -38,8 +37,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
     private lateinit var mMap: GoogleMap
     private lateinit var mRealm: Realm
     // 初期位置を六甲山に
-    private val mLatitude = 34.0 + 46.0 / 60 + 41.0 / (60 * 60)
-    private val mLongitude = 135.0 + 15.0 / 60 + 49.0 / (60 * 60)
+    private var mLatitude = 34.0 + 46.0 / 60 + 41.0 / (60 * 60)
+    private var mLongitude = 135.0 + 15.0 / 60 + 49.0 / (60 * 60)
 
     val RESULT_PICK_IMAGEFILE = 1000
     private lateinit var imageView: ImageView
@@ -72,6 +71,14 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
 
         // 長押し処理リスナー
         mMap.setOnMapLongClickListener(this)
+
+        // リストから移動してくる場合はその位置へ飛ぶため座標を設定し直す
+        val bundle = arguments
+        if (bundle != null) {
+            mLatitude = bundle.getDouble("latitude")
+            mLongitude = bundle.getDouble("longitude")
+        }
+
 
         // 初期位置を設定(仮)
         val location = LatLng(mLatitude, mLongitude)
@@ -116,7 +123,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
         val layout = LinearLayout(context)
         // 上から下にパーツを組み込む設定
         layout.orientation = LinearLayout.VERTICAL
-        layout.gravity = Gravity.CENTER
 
         // レイアウトに組み込むパーツの作成
         val textView1 = TextView(context)
