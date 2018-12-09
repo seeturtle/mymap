@@ -15,4 +15,5 @@ open class Place : RealmObject() {
     var longitude: Double = 0.0
     var description: String = ""
     var createdAt: Date = Date()
+    var image: ByteArray? = null
 }
