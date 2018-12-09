@@ -13,6 +13,6 @@ open class Place : RealmObject() {
     var name: String = ""
     var latitude: Double = 0.0
     var longitude: Double = 0.0
-    var discription: String = ""
+    var description: String = ""
     var createdAt: Date = Date()
 }
