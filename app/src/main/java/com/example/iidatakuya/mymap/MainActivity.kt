@@ -34,6 +34,22 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .setTitle(selectPlace?.name)
                 .setMessage(selectPlace?.description)
+                .setPositiveButton("マップに移動する") { dialog, whichButton ->
+
+                    val fragment = MapFragment()
+
+                    // データを渡す為の処理　Bundleを生成し、渡すデータを内包させる
+                    val bundle = Bundle()
+                    bundle.putDouble("longitude", selectPlace!!.longitude) // 引数はkey valueの形
+                    bundle.putDouble("latitude", selectPlace!!.latitude)
+                    fragment.setArguments(bundle)
+
+                    val transaction = fragmentManager.beginTransaction()
+                    // replaceでマップの切り替え　セットされているFragmentを全てRemoveしてから、指定のFragmentをAddする。
+                    transaction.replace(R.id.fragments, fragment)
+                    transaction.addToBackStack(null)
+                    transaction.commit()
+                }
                 .setNegativeButton("戻る", DialogInterface.OnClickListener { dialog, whichButton -> })
                 .show()
 
