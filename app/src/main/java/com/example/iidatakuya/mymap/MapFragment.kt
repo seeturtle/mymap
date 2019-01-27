@@ -147,7 +147,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
         }
 
         //外枠にパーツを組み込む
-        layout.addView(imageView)
+        layout.addView(imageView,LinearLayout.LayoutParams(500, 500))
 
         //レイアウトをダイアログに設定
         dialog.setView(layout)
