@@ -134,10 +134,6 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
                 transaction.commit()
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
-                println("未定のタブ")
-                return@OnNavigationItemSelectedListener true
-            }
         }
         false
     }
