@@ -5,13 +5,16 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentManager
+import android.support.v4.app.ShareCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -51,10 +54,41 @@ class MainActivity : AppCompatActivity(), OnListFragmentInteractionListener {
             val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
             imageView.setImageBitmap(bitmap)
         }
+        val shareButton = Button(this)
+        shareButton.text = "場所をシェア"
+        shareButton.setOnClickListener {
+
+            // builderの生成
+            val builder = ShareCompat.IntentBuilder.from(this)
+
+            // アプリ一覧が表示されるDialogのタイトルの設定
+            builder.setChooserTitle("場所のシェア")
+
+            // シェアする場所名
+            builder.setSubject(item?.name)
+
+            // シェアする位置情報
+            val locationUrl = "https://www.google.com/maps/search/?api=1&query=${item?.latitude},${item?.longitude}"
+            builder.setText("${item?.name} #MyMap $locationUrl")
+
+            // シェアするタイプ (画像がない場合はtext/plain)
+            if(item?.imageUri == null) {
+                builder.setType("text/plain")
+            } else {
+                builder.run {
+                    setStream(Uri.parse(item.imageUri))
+                    setType("image/jpeg")
+                }
+            }
+
+            // Shareアプリ一覧のDialogの表示
+            builder.startChooser()
+        }
 
         //外枠にパーツを組み込む
         layout.addView(description, LinearLayout.LayoutParams(500, 300))
         layout.addView(imageView, LinearLayout.LayoutParams(500, 500))
+        layout.addView(shareButton, LinearLayout.LayoutParams(300, 100))
 
         dialog.setView(layout)
                 .setTitle(selectPlace?.name)

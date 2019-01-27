@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
@@ -42,6 +43,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
 
     val RESULT_PICK_IMAGEFILE = 1000
     private lateinit var imageView: ImageView
+
+    private var uri: Uri? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -187,6 +190,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
                     val imageByteArray = baos.toByteArray()
                     place.image = imageByteArray
+
+                    place.imageUri = uri?.toString()
                 }
             }
         }
@@ -197,7 +202,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RESULT_PICK_IMAGEFILE && resultCode == RESULT_OK) {
             if (data != null) {
-                val uri = data.data
+                uri = data.data
                 val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
                 imageView.setImageBitmap(bitmap)
             }

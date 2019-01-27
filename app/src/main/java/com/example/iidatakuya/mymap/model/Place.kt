@@ -16,4 +16,5 @@ open class Place : RealmObject() {
     var description: String = ""
     var createdAt: Date = Date()
     var image: ByteArray? = null
+    var imageUri: String? = null
 }
