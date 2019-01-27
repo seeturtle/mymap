@@ -7,6 +7,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.provider.MediaStore
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import io.realm.Realm
 import io.realm.kotlin.createObject
@@ -32,7 +34,7 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 
 
-class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var mRealm: Realm
@@ -71,6 +73,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
 
         // 長押し処理リスナー
         mMap.setOnMapLongClickListener(this)
+        // マーカークリック処理リスナー
+        mMap.setOnMarkerClickListener(this)
 
         // リストから移動してくる場合はその位置へ飛ぶため座標を設定し直す
         val bundle = arguments
@@ -108,6 +112,50 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMapLongClickList
         // MyLocationButtonを有効に
         val settings = mMap.uiSettings
         settings.isMyLocationButtonEnabled = true
+    }
+
+    override fun onMarkerClick(p0: Marker?): Boolean {
+
+        val markerPosition  = p0!!.position
+        val markerlatitude = markerPosition.latitude
+        val markerlongitude = markerPosition.longitude
+
+        val markerPlace = mRealm.where<Place>(Place::class.java!!)
+                .equalTo("latitude",markerlatitude)
+                .equalTo("longitude",markerlongitude)
+                .findFirst()
+
+        // アラートダイアログビルダーのインスタンス生成
+        val dialog = AlertDialog.Builder(context)
+
+        // レイアウト作成（外枠とパーツの作成）
+        val layout = LinearLayout(context)
+        // 上から下にパーツを組み込む設定
+        layout.orientation = LinearLayout.VERTICAL
+        layout.gravity = Gravity.CENTER
+
+        // レイアウトに組み込むパーツの作成
+
+        // 画像
+        val imageView = ImageView(context)
+        markerPlace?.image?.let { byteArray ->
+            val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            imageView.setImageBitmap(bitmap)
+        }
+
+        //外枠にパーツを組み込む
+        layout.addView(imageView)
+
+        //レイアウトをダイアログに設定
+        dialog.setView(layout)
+        //タイトルの設定
+        dialog.setTitle(markerPlace!!.name).setMessage(markerPlace.description)
+
+        // dialogOKボタン
+        dialog.setNegativeButton("閉じる") { dialog, whichButton -> }
+              .show()
+
+        return false
     }
 
     //  長押し検知
